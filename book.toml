@@ -5,13 +5,15 @@ multilingual = false
 src = "src"
 title = "DB_Study"
 
-# add the emoji preprocessor
-[preprocessor.emojicodes]
 
 [output.html]
 additional-css = ["./mdbook-admonish.css"]
 
 [preprocessor]
+
+# add the emoji preprocessor
+[preprocessor.emojicodes]
+
 
 [preprocessor.admonish]
 command = "mdbook-admonish"
