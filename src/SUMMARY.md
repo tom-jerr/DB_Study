@@ -8,3 +8,4 @@
     - [Lab 2](./DB/CMU15445/lab/lab2.md) -->
 - [Chapter 2 Distributed System](./distributedsystem.md)
   - [raft 论文笔记](./DistributedSystem/raft/raft.md)
+  - [raft kv server](./DistributedSystem/raft/raftkv.md)
