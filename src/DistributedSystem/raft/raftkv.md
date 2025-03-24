@@ -138,3 +138,12 @@ for len(d.proposals) > 0 {
 	panic("This should not happen.")
 }
 ```
+
+## snap 工作流程
+
+- 在 `d.onRaftGCLogTick()` 中通过检查 `appliedIdx - firstIdx >= d.ctx.cfg.RaftLogGcCountLimit` 来决定是否进行日志删除。如果是，那么就通过 proposeRaftCommand() 提交一个 `AdminCmdType_CompactLog` 下去，当该 Request 被集群同步完成并在 HandleRaftReady 中执行时，会被交给 raftlog_gc.go 来实现删除。
+- 删除完日志后，节点会更新自己的 `applyState.TruncatedState.Index`，该字段指已经被删除的最后一条日志，即该日志之后均没有被删除。
+
+### snap 的生成
+
+- 因为 Snapshot 很大，不会马上生成，这里为了避免阻塞，生成操作设为异步，如果 Snapshot 还没有生成好，Snapshot 会先返回 raft.ErrSnapshotTemporarilyUnavailable 错误，Leader 就应该放弃本次 Snapshot，等待下一次再次请求 Snapshot。
